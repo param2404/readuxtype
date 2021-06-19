@@ -5,7 +5,6 @@ import {
   Avatar,
   Button,
   CssBaseline,
-  TextField,
   Link,
   Grid,
   Box,
@@ -13,13 +12,16 @@ import {
   Container
 } from '@material-ui/core';
 import { LockOutlined } from '@material-ui/icons';
+import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 import { makeStyles } from '@material-ui/core/styles';
 
 import { useAppSelector, useAppDispatch } from "../../app/hooks";
 import {
   login,
+  addUsers
 } from "./userSlice";
-import { getToken, loginError} from './userSelector'
+import { getToken, loginError } from './userSelector';
+import users from './../../data/users.json';
 
 function Copyright() {
   return (
@@ -66,17 +68,29 @@ const SignIn:FC<Props>=() => {
   const [password, setPassword] = useState('');
 
 
-  const onSubmit = (e: React.MouseEvent<HTMLElement>) => {
+  const onSubmit = (e: any) => {
     e.preventDefault();
     dispatch(login({ email, password }))
   }
+
+  const onEmailEdit = (e: any) => {
+    setEmail(e.target.value);
+  }
+
+  const onPasswordEdit = (e: any) => {
+    setPassword(e.target.value);
+  };
 
   useEffect(() => {
     if (token) {
       history.push('./dashboard');
       console.log(token);
     }
-  }, [token,history])
+  }, [token, history])
+  
+  useEffect(() => {
+   dispatch(addUsers(users)) 
+  },[])
 
   return (
     <Container component="main" maxWidth="xs">
@@ -87,31 +101,34 @@ const SignIn:FC<Props>=() => {
         </Avatar>
         <Typography component="h1" variant="h5">
           Sign in
-          </Typography>
-        <form className={classes.form} >
-          <TextField
+        </Typography>
+        <ValidatorForm className={classes.form} onSubmit={onSubmit}>
+          <TextValidator
             variant="outlined"
             margin="normal"
-            required
             fullWidth
             id="email"
+            type="email"
             label="Email Address"
             name="email"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={onEmailEdit}
+            validators={["required", "isEmail"]}
+            errorMessages={["This field is required", "Email is not valid"]}
             autoFocus
           />
-          <TextField
+          <TextValidator
             variant="outlined"
             margin="normal"
-            required
             fullWidth
             name="password"
             label="Password"
             type="password"
             id="password"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={onPasswordEdit}
+            validators={["required"]}
+            errorMessages={["This field is required"]}
           />
           <Button
             type="submit"
@@ -119,21 +136,26 @@ const SignIn:FC<Props>=() => {
             variant="contained"
             color="primary"
             className={classes.submit}
-            onClick={onSubmit}
             // disabled={error ?true :false}
           >
             Sign In
-            </Button>
+          </Button>
           <Grid container>
             <Grid item>
-              <Link href="#" variant="body2" align="center"
-                onClick={(e: React.MouseEvent<HTMLElement>) => { history.push('./register') }}>
+              <Link
+                href="#"
+                variant="body2"
+                align="center"
+                onClick={(e: React.MouseEvent<HTMLElement>) => {
+                  history.push("./register");
+                }}
+              >
                 {"Don't have an account? Sign Up"}
               </Link>
             </Grid>
           </Grid>
-        {error && <div>{error}</div>}
-        </form>
+          {error && <div>{error}</div>}
+        </ValidatorForm>
       </div>
       <Box mt={8}>
         <Copyright />

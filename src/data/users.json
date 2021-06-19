@@ -1,0 +1,22 @@
+[
+    {
+        "firstName": "Admin",
+        "email": "admin@admin.com",
+        "phone":"9999999999",
+        "address":"xyz",
+        "password":"admin",
+        "proPic":"",
+        "description":"i'm admin",
+        "userRole":"admin"
+    },
+    {
+      "firstName": "User1",
+      "email": "user@user.com",
+      "phone": "9999999889",
+      "address": "wxyz",
+      "password": "user",
+      "proPic": "",
+      "description": "i'm user",
+      "userRole": "user"
+    }
+]
