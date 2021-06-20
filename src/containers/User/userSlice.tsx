@@ -41,7 +41,7 @@ export const userSlice = createSlice({
     },
     registerSuccess: (state, action: PayloadAction<any>) => {
       state.isLoggedIn = true;
-      state.userData = action.payload;
+      state.userData = [action.payload];
       state.token = "xyz";
       state.errRegister = "";
       state.allUsers = [...state.allUsers, action.payload];
@@ -59,12 +59,18 @@ export const userSlice = createSlice({
       state.errLogin = "";
     },
     deleteUser: (state, action: PayloadAction<any>) => {
-      state.allUsers=state.allUsers.filter((u:any)=>u.email !== action.payload);
+      state.allUsers = state.allUsers.filter(
+        (u: any) => u.email !== action.payload
+      );
+    },
+    update: (state, action: PayloadAction<any>) => {
+      state.allUsers =state.allUsers.map((user:any) => (user.email === action.payload.email ? { ...user,...action.payload } : user))
+      state.userData=[{...state.userData[0] , ...action.payload}]
     },
   },
 });
 
-export const { loginSuccess,loginError,addUsers,registerSuccess, registerError,logout, deleteUser } = userSlice.actions;
+export const { loginSuccess,loginError,addUsers,registerSuccess, registerError,logout, deleteUser,update } = userSlice.actions;
 
 export const login = (value: any): AppThunk => (
     dispatch,

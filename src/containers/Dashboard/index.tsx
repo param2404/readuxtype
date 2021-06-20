@@ -1,4 +1,4 @@
-import React, { FC , useEffect } from 'react';
+import React, { FC , useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { RouteComponentProps } from "react-router";
 import clsx from 'clsx';
@@ -19,6 +19,7 @@ import {
     ListItemText
 } from '@material-ui/core';
 import AllUsers from './AllUsers';
+import MyProfile from './MyProfile';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import { ExitToApp, Person, People } from '@material-ui/icons';
@@ -120,6 +121,7 @@ const Dashboard: FC<Props> = () => {
     const dispatch = useAppDispatch();
     const token = useAppSelector(getToken);
     const userData = useAppSelector(getUserData);
+    const [component,setComponent] = useState('me')
     const [open, setOpen] = React.useState(false);
     const handleDrawerOpen = () => {
         setOpen(true);
@@ -174,13 +176,13 @@ const Dashboard: FC<Props> = () => {
                 </div>
                 <Divider />
                 <List><ListItem button>
-                    <ListItemIcon>
+                    <ListItemIcon onClick={()=>setComponent('me')}>
                         <Person />
                     </ListItemIcon>
                     <ListItemText primary="My Profile" />
                 </ListItem>
                     {userData && userData.length && userData[0].userRole === 'admin' && <ListItem button>
-                        <ListItemIcon>
+                        <ListItemIcon onClick={()=>setComponent('users')}>
                             <People />
                         </ListItemIcon>
                         <ListItemText primary="Users" />
@@ -191,8 +193,7 @@ const Dashboard: FC<Props> = () => {
                 <div className={classes.appBarSpacer} />
                 <Container maxWidth="lg" className={classes.container}>
                     <Grid container spacing={3}>
-                        <AllUsers/>
-
+                      {component === 'me' ? <MyProfile/>:<AllUsers/>}
                     </Grid>
                  </Container>
             </main>

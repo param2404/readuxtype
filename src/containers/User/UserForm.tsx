@@ -72,7 +72,7 @@ const SignUp: FC<Props> = () => {
 
   const onRegister = (e: any) => {
     e.preventDefault();
-    dispatch(register({ firstName,email,phone, password , description ,userRole }));
+    dispatch(register({ firstName,email,phone,address, password , description ,userRole }));
   };
 
   useEffect(() => {

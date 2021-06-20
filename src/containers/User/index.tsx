@@ -20,7 +20,7 @@ import {
   login,
   addUsers
 } from "./userSlice";
-import { getToken, loginError } from './userSelector';
+import { getToken, loginError, getUsers } from "./userSelector";
 import users from './../../data/users.json';
 
 function Copyright() {
@@ -64,6 +64,7 @@ const SignIn:FC<Props>=() => {
   const dispatch = useAppDispatch();
   const token = useAppSelector(getToken);
   const error = useAppSelector(loginError);
+  const allUsers = useAppSelector(getUsers);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -89,8 +90,9 @@ const SignIn:FC<Props>=() => {
   }, [token, history])
   
   useEffect(() => {
-   dispatch(addUsers(users)) 
-  },[])
+   if(allUsers.length === 0){
+    dispatch(addUsers(users)) 
+  }},[])
 
   return (
     <Container component="main" maxWidth="xs">
