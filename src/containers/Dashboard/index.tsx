@@ -1,42 +1,34 @@
-import React,{FC} from 'react';
+import React, { FC , useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 import { RouteComponentProps } from "react-router";
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import {
     CssBaseline,
     Drawer,
-    Box,
     AppBar,
     Toolbar,
     List,
     Typography,
     Divider,
     IconButton,
-    Badge,
     Container,
     Grid,
-    Link,
     ListItem,
     ListItemIcon,
     ListItemText
 } from '@material-ui/core';
-
+import AllUsers from './AllUsers';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import NotificationsIcon from '@material-ui/icons/Notifications';
+import { ExitToApp, Person, People } from '@material-ui/icons';
 
-function Copyright() {
-    return (
-        <Typography variant="body2" color="textSecondary" align="center">
-            {'Copyright © '}
-            <Link color="inherit" href="https://material-ui.com/">
-                Your Website
-      </Link>{' '}
-            {new Date().getFullYear()}
-            {'.'}
-        </Typography>
-    );
-}
+import { useAppSelector, useAppDispatch } from "../../app/hooks";
+import {
+    logout
+} from "./../User/userSlice";
+import { getToken, getUserData } from './../User/userSelector';
+
 
 const drawerWidth = 240;
 
@@ -82,6 +74,7 @@ const useStyles = makeStyles((theme) => ({
         position: 'relative',
         whiteSpace: 'nowrap',
         width: drawerWidth,
+        background: "#3f71cd",
         transition: theme.transitions.create('width', {
             easing: theme.transitions.easing.sharp,
             duration: theme.transitions.duration.enteringScreen,
@@ -121,16 +114,30 @@ const useStyles = makeStyles((theme) => ({
 
 type Props = { component: FC } & RouteComponentProps;
 
-const Dashboard: FC<Props>=()=> {
+const Dashboard: FC<Props> = () => {
     const classes = useStyles();
-    const [open, setOpen] = React.useState(true);
+    const history = useHistory();
+    const dispatch = useAppDispatch();
+    const token = useAppSelector(getToken);
+    const userData = useAppSelector(getUserData);
+    const [open, setOpen] = React.useState(false);
     const handleDrawerOpen = () => {
         setOpen(true);
     };
     const handleDrawerClose = () => {
         setOpen(false);
     };
-   
+
+    const onLogout = () => {
+        dispatch(logout())
+    }
+
+    useEffect(() => {
+        if (!token) {
+            history.push('./');
+        }
+    }, [token, history])
+
     return (
         <div className={classes.root}>
             <CssBaseline />
@@ -146,12 +153,10 @@ const Dashboard: FC<Props>=()=> {
                         <MenuIcon />
                     </IconButton>
                     <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
-                        Dashboard
+                        Home
           </Typography>
-                    <IconButton color="inherit">
-                        <Badge badgeContent={4} color="secondary">
-                            <NotificationsIcon />
-                        </Badge>
+                    <IconButton color="inherit" onClick={onLogout}>
+                        <ExitToApp />
                     </IconButton>
                 </Toolbar>
             </AppBar>
@@ -170,31 +175,30 @@ const Dashboard: FC<Props>=()=> {
                 <Divider />
                 <List><ListItem button>
                     <ListItemIcon>
-                        <MenuIcon />
+                        <Person />
                     </ListItemIcon>
-                    <ListItemText primary="Dashboard" />
+                    <ListItemText primary="My Profile" />
                 </ListItem>
-                    <ListItem button>
+                    {userData && userData.length && userData[0].userRole === 'admin' && <ListItem button>
                         <ListItemIcon>
-                            <MenuIcon />
+                            <People />
                         </ListItemIcon>
-                        <ListItemText primary="Orders" />
-                    </ListItem></List>
+                        <ListItemText primary="Users" />
+                    </ListItem>}
+                </List>
             </Drawer>
             <main className={classes.content}>
                 <div className={classes.appBarSpacer} />
                 <Container maxWidth="lg" className={classes.container}>
                     <Grid container spacing={3}>
-                       
-                        
+                        <AllUsers/>
+
                     </Grid>
-                    <Box pt={4}>
-                        <Copyright />
-                    </Box>
-                </Container>
+                 </Container>
             </main>
         </div>
     );
-}
+};
+
 
 export default Dashboard;

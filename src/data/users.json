@@ -11,12 +11,22 @@
     },
     {
       "firstName": "User1",
-      "email": "user@user.com",
+      "email": "user1@user.com",
       "phone": "9999999889",
       "address": "wxyz",
       "password": "user",
       "proPic": "",
       "description": "i'm user",
       "userRole": "user"
-    }
+    },
+     {
+       "firstName": "User2",
+       "email": "user2@user.com",
+       "phone": "9996769889",
+       "address": "wxyggz",
+       "password": "user",
+       "proPic": "",
+       "description": "i'm user",
+       "userRole": "user"
+     }
 ]

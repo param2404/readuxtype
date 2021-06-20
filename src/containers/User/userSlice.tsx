@@ -52,10 +52,19 @@ export const userSlice = createSlice({
       state.token = "";
       state.errRegister = "User Already Exist";
     },
+    logout: (state) => {
+      state.isLoggedIn = false;
+      state.userData = {};
+      state.token = "";
+      state.errLogin = "";
+    },
+    deleteUser: (state, action: PayloadAction<any>) => {
+      state.allUsers=state.allUsers.filter((u:any)=>u.email !== action.payload);
+    },
   },
 });
 
-export const { loginSuccess,loginError,addUsers,registerSuccess, registerError } = userSlice.actions;
+export const { loginSuccess,loginError,addUsers,registerSuccess, registerError,logout, deleteUser } = userSlice.actions;
 
 export const login = (value: any): AppThunk => (
     dispatch,
