@@ -50,6 +50,9 @@ const useStyles = makeStyles((theme) => ({
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
+  error: {
+    color: 'red'
+  }
 }));
 
 type Props = { component: FC } & RouteComponentProps;
@@ -231,7 +234,7 @@ const SignUp: FC<Props> = () => {
             >
             Sign Up
           </Button>
-            {error && <div>{error}</div>}
+          {error && <div className={classes.error}>{error}</div>}
           <Grid container justify="flex-end">
             <Grid item>
               <Link

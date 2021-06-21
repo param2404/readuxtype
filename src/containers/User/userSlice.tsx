@@ -78,7 +78,7 @@ export const login = (value: any): AppThunk => (
 ) => {
     let user = getUsers(getState());
     const result = user.filter((u: any) => u.email === value.email && u.password === value.password)
-    if (result) {
+    if (result && result.length) {
         dispatch(loginSuccess(result));
     } else {
         dispatch(loginError())
